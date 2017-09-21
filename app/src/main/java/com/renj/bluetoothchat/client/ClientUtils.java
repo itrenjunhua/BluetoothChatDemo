@@ -131,7 +131,7 @@ public class ClientUtils {
      * @param clientConnListener
      * @return
      */
-    public ClientUtils setOnBluetoothBondChangeListener(ClientConnListener clientConnListener) {
+    public ClientUtils setOnClientConnListener(ClientConnListener clientConnListener) {
         this.mClientConnListener = clientConnListener;
         return this;
     }

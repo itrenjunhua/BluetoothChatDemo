@@ -108,6 +108,8 @@ public class ClientConnUtils {
                     mBluetoothSocket =
                             mBluetoothDevice.createInsecureRfcommSocketToServiceRecord(Constants.MY_UUID_INSECURE);
                 }
+                if (!mBluetoothSocket.isConnected())
+                    mBluetoothSocket.connect();
                 if (mClientConnListener != null)
                     mClientConnListener.onSucceed(secure, mBluetoothSocket);
 

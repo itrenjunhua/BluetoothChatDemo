@@ -144,7 +144,7 @@ public class BluetoothServer {
      * 蓝牙服务端打开状态监听<br />
      * 启动(成功、失败)/关闭
      */
-    public abstract class ServerStateListener {
+    public abstract static class ServerStateListener {
         /**
          * 启动成功
          *

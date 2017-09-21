@@ -4,16 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/bt_server"
+    <TextView
+        android:id="@+id/textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="进入服务器端" />
-
-    <Button
-        android:id="@+id/bt_client"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="进入客户端" />
+        android:padding="12dp" />
 
 </LinearLayout>

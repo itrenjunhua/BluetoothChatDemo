@@ -5,15 +5,20 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/bt_server"
+        android:id="@+id/bt_open"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="进入服务器端" />
+        android:text="打开蓝牙" />
 
     <Button
-        android:id="@+id/bt_client"
+        android:id="@+id/bt_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="进入客户端" />
+        android:text="搜索设备" />
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
