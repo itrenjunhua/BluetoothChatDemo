@@ -3,6 +3,9 @@ package com.renj.bluetoothchat.server;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 
 import com.renj.bluetoothchat.common.Constants;
 import com.renj.bluetoothchat.common.LogUtil;
@@ -37,6 +40,31 @@ public class BluetoothServer {
     private BluetoothServerThread mBluetoothServerThread;
     // 使用单例
     private static BluetoothServer mBluetoothServer = new BluetoothServer();
+
+    private final int MSG_OPEN_SUCCEED = 0XFF01;
+    private final int MSG_OPEN_FAILED = 0XFF02;
+    private final int MSG_CLOSE = 0XFF03;
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_OPEN_SUCCEED:
+                    boolean secure = (boolean) msg.obj;
+                    if (mServerStateListener != null)
+                        mServerStateListener.onOpenSucceed(secure);
+                    break;
+                case MSG_OPEN_FAILED:
+                    Exception e = (Exception) msg.obj;
+                    if (mServerStateListener != null)
+                        mServerStateListener.onOpenFailed(e);
+                    break;
+                case MSG_CLOSE:
+                    if (mServerStateListener != null)
+                        mServerStateListener.onClose();
+                    break;
+            }
+        }
+    };
 
     private BluetoothServer() {
     }
@@ -84,15 +112,18 @@ public class BluetoothServer {
             mBluetoothServerThread = null;
             mBluetoothAdapter = null;
         }
-
-        if (mServerStateListener != null)
-            mServerStateListener.onClose();
+        mHandler.sendEmptyMessage(MSG_CLOSE);
     }
 
     /**
      * 客户端连接监听器
      */
     public interface ServerAcceptListener {
+        /**
+         * 连接成功，<b>方法运行在子线程</b>
+         *
+         * @param bluetoothSocket 蓝牙Socket对象
+         */
         void onAccept(BluetoothSocket bluetoothSocket);
     }
 
@@ -150,13 +181,17 @@ public class BluetoothServer {
                             Constants.NAME_INSECURE, Constants.MY_UUID_INSECURE);
                 }
 
-                if (mServerStateListener != null)
-                    mServerStateListener.onOpenSucceed(secure);
+                Message message = Message.obtain();
+                message.what = MSG_OPEN_SUCCEED;
+                message.obj = secure;
+                mHandler.sendMessage(message);
 
                 LogUtil.i("Socket Type：" + mSocketType + " listen() succeed");
             } catch (IOException e) {
-                if (mServerStateListener != null)
-                    mServerStateListener.onOpenFailed(e);
+                Message message = Message.obtain();
+                message.what = MSG_OPEN_FAILED;
+                message.obj = e;
+                mHandler.sendMessage(message);
 
                 LogUtil.e("Socket Type：" + mSocketType + " listen() failed\n" + e);
             }
