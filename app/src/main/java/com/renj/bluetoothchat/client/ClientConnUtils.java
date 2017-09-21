@@ -25,13 +25,13 @@ public class ClientConnUtils {
     // 连接类型 安全/受保护的连接(Secure)或者不安全的连接/不受保护的连接(Insecure)
     private String mSocketType;
     // 蓝牙设备
-    private BluetoothDevice bluetoothDevice;
+    private BluetoothDevice mBluetoothDevice;
     // 蓝牙 Socket 对象
-    private BluetoothSocket bluetoothSocket;
+    private BluetoothSocket mBluetoothSocket;
     // 连接监听，方法执行在子线程
-    private ClientConnListener clientConnListener;
+    private ClientConnListener mClientConnListener;
     // 连接的线程对象
-    private ClientConnThread clientConnThread;
+    private ClientConnThread mClientConnThread;
 
     /**
      * 创建连接
@@ -41,11 +41,11 @@ public class ClientConnUtils {
      * @param clientConnListener 连接监听器对象
      */
     public void createConnection(boolean secure, BluetoothDevice bluetoothDevice, ClientConnListener clientConnListener) {
-        if (clientConnThread == null) {
-            this.bluetoothDevice = bluetoothDevice;
-            this.clientConnListener = clientConnListener;
-            clientConnThread = new ClientConnThread(secure);
-            clientConnThread.start();
+        if (mClientConnThread == null) {
+            this.mBluetoothDevice = bluetoothDevice;
+            this.mClientConnListener = clientConnListener;
+            mClientConnThread = new ClientConnThread(secure);
+            mClientConnThread.start();
         }
     }
 
@@ -53,17 +53,17 @@ public class ClientConnUtils {
      * 关闭连接
      */
     public void closeConnection() {
-        if (bluetoothSocket != null) {
-            if (bluetoothSocket.isConnected()) {
+        if (mBluetoothSocket != null) {
+            if (mBluetoothSocket.isConnected()) {
                 try {
-                    bluetoothSocket.close();
+                    mBluetoothSocket.close();
                 } catch (IOException e) {
                     LogUtil.e("client close BluetoothSocket failed.\n" + e);
                 }
             }
-            clientConnThread.stop();
-            clientConnThread = null;
-            bluetoothSocket = null;
+            mClientConnThread.stop();
+            mClientConnThread = null;
+            mBluetoothSocket = null;
         }
     }
 
@@ -102,19 +102,19 @@ public class ClientConnUtils {
         public void run() {
             try {
                 if (secure) {
-                    bluetoothSocket =
-                            bluetoothDevice.createRfcommSocketToServiceRecord(Constants.MY_UUID_SECURE);
+                    mBluetoothSocket =
+                            mBluetoothDevice.createRfcommSocketToServiceRecord(Constants.MY_UUID_SECURE);
                 } else {
-                    bluetoothSocket =
-                            bluetoothDevice.createInsecureRfcommSocketToServiceRecord(Constants.MY_UUID_INSECURE);
+                    mBluetoothSocket =
+                            mBluetoothDevice.createInsecureRfcommSocketToServiceRecord(Constants.MY_UUID_INSECURE);
                 }
-                if (clientConnListener != null)
-                    clientConnListener.onSucceed(secure, bluetoothSocket);
+                if (mClientConnListener != null)
+                    mClientConnListener.onSucceed(secure, mBluetoothSocket);
 
                 LogUtil.i("Socket Type：" + mSocketType + " connection service succeed");
             } catch (IOException e) {
-                if (clientConnListener != null)
-                    clientConnListener.onFialed(e);
+                if (mClientConnListener != null)
+                    mClientConnListener.onFialed(e);
 
                 LogUtil.e("Socket Type：" + mSocketType + " connection service failed\n" + e);
             }

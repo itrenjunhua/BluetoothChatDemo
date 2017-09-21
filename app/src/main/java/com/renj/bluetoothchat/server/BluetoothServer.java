@@ -79,6 +79,17 @@ public class BluetoothServer {
     }
 
     /**
+     * 打开设备蓝牙
+     *
+     * @return
+     */
+    private void openBluetooth() {
+        if (!mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.enable();
+        }
+    }
+
+    /**
      * 设置蓝牙服务端状态监听 启动(成功、失败)/关闭
      *
      * @param serverStateListener
@@ -95,6 +106,8 @@ public class BluetoothServer {
      */
     public void openBluetoothServer(boolean secure, ServerAcceptListener serverAcceptListener) {
         if (mBluetoothServerThread == null) {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            openBluetooth();
             this.mServerAcceptListener = serverAcceptListener;
             this.mBluetoothServerThread = new BluetoothServerThread(secure);
             this.mBluetoothServerThread.start();
@@ -171,7 +184,6 @@ public class BluetoothServer {
         public BluetoothServerThread(boolean secure) {
             mSocketType = secure ? "Secure" : "Insecure";
             BluetoothServerSocket tmp = null;
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             try {
                 if (secure) {
                     tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(
