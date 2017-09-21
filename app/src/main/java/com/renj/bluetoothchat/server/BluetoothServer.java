@@ -31,6 +31,8 @@ public class BluetoothServer {
     private BluetoothServerSocket mBluetoothServerSocket;
     // 客户端连接监听(当客户端成功连接时回调)
     private ServerAcceptListener mServerAcceptListener;
+    // 蓝牙服务端状态监听 启动(成功、失败)/关闭
+    private ServerStateListener mServerStateListener;
     // 服务器端线程对象
     private BluetoothServerThread mBluetoothServerThread;
     // 使用单例
@@ -39,8 +41,22 @@ public class BluetoothServer {
     private BluetoothServer() {
     }
 
+    /**
+     * 获取BluetoothServer对象
+     *
+     * @return
+     */
     public static BluetoothServer newInstance() {
         return mBluetoothServer;
+    }
+
+    /**
+     * 设置蓝牙服务端状态监听 启动(成功、失败)/关闭
+     *
+     * @param serverStateListener
+     */
+    public void setOnServerStateListener(ServerStateListener serverStateListener) {
+        this.mServerStateListener = serverStateListener;
     }
 
     /**
@@ -68,6 +84,9 @@ public class BluetoothServer {
             mBluetoothServerThread = null;
             mBluetoothAdapter = null;
         }
+
+        if (mServerStateListener != null)
+            mServerStateListener.onClose();
     }
 
     /**
@@ -75,6 +94,36 @@ public class BluetoothServer {
      */
     public interface ServerAcceptListener {
         void onAccept(BluetoothSocket bluetoothSocket);
+    }
+
+    /**
+     * 蓝牙服务端打开状态监听<br />
+     * 启动(成功、失败)/关闭
+     */
+    public abstract class ServerStateListener {
+        /**
+         * 启动成功
+         *
+         * @param secure 连接类型 <br />
+         *               true：安全/受保护的连接(Secure)<br />
+         *               false：不安全的连接/不受保护的连接(Insecure)
+         */
+        public void onOpenSucceed(boolean secure) {
+        }
+
+        /**
+         * 启动失败
+         *
+         * @param e 异常信息
+         */
+        public void onOpenFailed(Exception e) {
+        }
+
+        /**
+         * 关闭
+         */
+        public void onClose() {
+        }
     }
 
     /**
@@ -100,8 +149,15 @@ public class BluetoothServer {
                     tmp = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(
                             Constants.NAME_INSECURE, Constants.MY_UUID_INSECURE);
                 }
+
+                if (mServerStateListener != null)
+                    mServerStateListener.onOpenSucceed(secure);
+
                 LogUtil.i("Socket Type：" + mSocketType + " listen() succeed");
             } catch (IOException e) {
+                if (mServerStateListener != null)
+                    mServerStateListener.onOpenFailed(e);
+
                 LogUtil.e("Socket Type：" + mSocketType + " listen() failed\n" + e);
             }
             mBluetoothServerSocket = tmp;
