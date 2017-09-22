@@ -83,10 +83,11 @@ public class BluetoothServer {
      *
      * @return
      */
-    private void openBluetooth() {
+    private BluetoothServer openBluetooth() {
         if (!mBluetoothAdapter.isEnabled()) {
             mBluetoothAdapter.enable();
         }
+        return mBluetoothServer;
     }
 
     /**
@@ -94,8 +95,9 @@ public class BluetoothServer {
      *
      * @param serverStateListener
      */
-    public void setOnServerStateListener(ServerStateListener serverStateListener) {
+    public BluetoothServer setOnServerStateListener(ServerStateListener serverStateListener) {
         this.mServerStateListener = serverStateListener;
+        return mBluetoothServer;
     }
 
     /**
@@ -104,7 +106,7 @@ public class BluetoothServer {
      * @param secure               是否安全打开
      * @param serverAcceptListener 客户端连接监听器
      */
-    public void openBluetoothServer(boolean secure, ServerAcceptListener serverAcceptListener) {
+    public BluetoothServer openBluetoothServer(boolean secure, ServerAcceptListener serverAcceptListener) {
         if (mBluetoothServerThread == null) {
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             openBluetooth();
@@ -114,22 +116,24 @@ public class BluetoothServer {
         } else {
             LogUtil.d("BluetoothServer already open ...");
         }
+        return mBluetoothServer;
     }
 
     /**
      * 关闭蓝牙服务器
      */
-    public void closeBluetoothServer() {
+    public BluetoothServer closeBluetoothServer() {
         if (mBluetoothServerThread != null) {
             mBluetoothServerThread.interrupt();
             mBluetoothServerThread = null;
             mBluetoothAdapter = null;
         }
         mHandler.sendEmptyMessage(MSG_CLOSE);
+        return mBluetoothServer;
     }
 
     /**
-     * 客户端连接监听器
+     * 客户端连接监听器，<b>方法运行在子线程</b>
      */
     public interface ServerAcceptListener {
         /**

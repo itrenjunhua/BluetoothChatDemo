@@ -21,7 +21,7 @@ import java.io.IOException;
  * <p>
  * ======================================================================
  */
-public class ClientConnUtils {
+public class BluetoothClientConnUtils {
     // 连接类型 安全/受保护的连接(Secure)或者不安全的连接/不受保护的连接(Insecure)
     private String mSocketType;
     // 蓝牙设备
@@ -32,6 +32,15 @@ public class ClientConnUtils {
     private ClientConnListener mClientConnListener;
     // 连接的线程对象
     private ClientConnThread mClientConnThread;
+    // 使用单例
+    private static BluetoothClientConnUtils mBluetoothClientConnUtils = new BluetoothClientConnUtils();
+
+    private BluetoothClientConnUtils() {
+    }
+
+    static BluetoothClientConnUtils newInsteace() {
+        return mBluetoothClientConnUtils;
+    }
 
     /**
      * 创建连接
@@ -40,7 +49,7 @@ public class ClientConnUtils {
      * @param bluetoothDevice    需要建立连接的设备
      * @param clientConnListener 连接监听器对象
      */
-    public void createConnection(boolean secure, BluetoothDevice bluetoothDevice, ClientConnListener clientConnListener) {
+    void createConnection(boolean secure, BluetoothDevice bluetoothDevice, ClientConnListener clientConnListener) {
         if (mClientConnThread == null) {
             this.mBluetoothDevice = bluetoothDevice;
             this.mClientConnListener = clientConnListener;
@@ -52,7 +61,7 @@ public class ClientConnUtils {
     /**
      * 关闭连接
      */
-    public void closeConnection() {
+    void closeConnection() {
         if (mBluetoothSocket != null) {
             if (mBluetoothSocket.isConnected()) {
                 try {
@@ -70,7 +79,7 @@ public class ClientConnUtils {
     /**
      * 建立连接监听，<b>方法运行在子线程</b>
      */
-    public interface ClientConnListener {
+    interface ClientConnListener {
         /**
          * 连接建立成功，<b>方法运行在子线程</b>
          *

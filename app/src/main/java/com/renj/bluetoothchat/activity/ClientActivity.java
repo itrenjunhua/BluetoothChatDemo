@@ -17,8 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.renj.bluetoothchat.R;
-import com.renj.bluetoothchat.client.ClientConnUtils;
-import com.renj.bluetoothchat.client.ClientUtils;
+import com.renj.bluetoothchat.client.BluetoothClient;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -41,8 +40,7 @@ public class ClientActivity extends Activity {
     private Button btOpen, btSearch;
     private ListView listView;
 
-    private ClientUtils clientUtils;
-    private ClientConnUtils clientConnUtils;
+    private BluetoothClient bluetoothClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,32 +51,31 @@ public class ClientActivity extends Activity {
         btSearch = (Button) findViewById(R.id.bt_search);
         listView = (ListView) findViewById(R.id.listview);
 
-        clientUtils = new ClientUtils(this);
-        clientConnUtils = new ClientConnUtils();
+        bluetoothClient = BluetoothClient.newInstance(this);
 
         btOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clientUtils.openBluetooth();
+                bluetoothClient.openBluetooth();
             }
         });
 
         btSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clientUtils.startSearch();
+                bluetoothClient.startSearch();
             }
         });
 
-        clientUtils.setOnBluetoothSearchFinishedListener(new ClientUtils.BluetoothSearchFinishedListener() {
+        bluetoothClient.setOnBluetoothSearchFinishedListener(new BluetoothClient.BluetoothSearchFinishedListener() {
             @Override
-            public void finishedSearch(List<BluetoothDevice> devices) {
+            public void onFinishedSearch(List<BluetoothDevice> devices) {
                 listView.setAdapter(new MyAdapter(devices));
             }
         })
-                .setOnBluetoothSearchResultListener(new ClientUtils.BluetoothSearchResultListener() {
+                .setOnBluetoothFindDeviceListener(new BluetoothClient.BluetoothFindDeviceListener() {
                     @Override
-                    public void findDevice(BluetoothDevice device) {
+                    public void onFindDevice(BluetoothDevice device) {
                         Log.i("MainActivity", "找到设备：" + device.toString());
                     }
                 });
@@ -87,28 +84,29 @@ public class ClientActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BluetoothDevice itemAtPosition = (BluetoothDevice) parent.getItemAtPosition(position);
-                clientUtils.bondAndConn(true, itemAtPosition);
+                bluetoothClient.bondAndConn(true, itemAtPosition);
             }
         });
 
-        clientUtils.setOnBluetoothBondChangeListener(new ClientUtils.BluetoothBondChangeListener() {
+        bluetoothClient.setOnBluetoothBondChangeListener(new BluetoothClient.BluetoothBondChangeListener() {
             @Override
-            public void bond() {
+            public void onBond() {
                 Toast.makeText(ClientActivity.this, "未配对", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void bonding() {
+            public void onBonding() {
                 Toast.makeText(ClientActivity.this, "未配对", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void bonded() {
+            public void onBonded() {
                 Toast.makeText(ClientActivity.this, "已配对", Toast.LENGTH_SHORT).show();
             }
         });
 
-        clientUtils.setOnClientConnListener(new ClientUtils.ClientConnListener() {
+
+        bluetoothClient.setOnClientConnListener(new BluetoothClient.ClientConnListener() {
             @Override
             public void onSucceed(boolean secure, BluetoothSocket bluetoothSocket) {
                 try {
