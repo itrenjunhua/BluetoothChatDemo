@@ -11,11 +11,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.renj.bluetoothchat.R;
-import com.renj.bluetoothchat.common.LogUtil;
 import com.renj.bluetoothchat.bluetooth.BluetoothServer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * ======================================================================
@@ -73,13 +73,18 @@ public class ServerActivity extends Activity {
                     public void onAccept(BluetoothSocket bluetoothSocket) {
                         try {
                             InputStream inputStream = bluetoothSocket.getInputStream();
-                            byte[] bytes = new byte[1024 * 2];
-                            inputStream.read(bytes);
-                            LogUtil.i("接收到信息：" + new String(bytes, 0, bytes.length));
-                            Message message = Message.obtain();
-                            message.what = MSG_HAVE_CONTENT;
-                            message.obj = new String(bytes, 0, bytes.length);
-                            handler.sendMessage(message);
+                            OutputStream outputStream = bluetoothSocket.getOutputStream();
+                            while (true) {
+                                byte[] bytes = new byte[1024];
+                                inputStream.read(bytes);
+                                Message message = Message.obtain();
+                                message.what = MSG_HAVE_CONTENT;
+                                String s = new String(bytes, 0, bytes.length);
+                                message.obj = s;
+                                handler.sendMessage(message);
+
+                                outputStream.write(s.getBytes());
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

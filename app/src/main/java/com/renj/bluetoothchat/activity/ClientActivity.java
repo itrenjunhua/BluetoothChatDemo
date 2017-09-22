@@ -2,7 +2,7 @@ package com.renj.bluetoothchat.activity;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,14 +13,11 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.renj.bluetoothchat.R;
 import com.renj.bluetoothchat.bluetooth.BluetoothClient;
 import com.renj.bluetoothchat.common.LogUtil;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -51,7 +48,7 @@ public class ClientActivity extends Activity {
         btSearch = (Button) findViewById(R.id.bt_search);
         listView = (ListView) findViewById(R.id.listview);
 
-        bluetoothClient = BluetoothClient.newInstance(this);
+        bluetoothClient = BluetoothClient.newInstance(getApplicationContext());
 
         // 打开蓝牙
         btOpen.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +66,7 @@ public class ClientActivity extends Activity {
             }
         });
 
+        // 设置蓝牙操作的相关监听
         bluetoothClient
                 .setOnBluetoothFindDeviceListener(new BluetoothClient.BluetoothFindDeviceListener() {
                     @Override
@@ -81,45 +79,16 @@ public class ClientActivity extends Activity {
                     public void onFinishedSearch(List<BluetoothDevice> devices) {
                         listView.setAdapter(new MyAdapter(devices));
                     }
-                })
-                .setOnBluetoothBondChangeListener(new BluetoothClient.BluetoothBondChangeListener() {
-                    @Override
-                    public void onBond() {
-                        Toast.makeText(ClientActivity.this, "未配对", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onBonding() {
-                        Toast.makeText(ClientActivity.this, "未配对", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onBonded() {
-                        Toast.makeText(ClientActivity.this, "已配对", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setOnClientConnListener(new BluetoothClient.ClientConnListener() {
-                    @Override
-                    public void onSucceed(boolean secure, BluetoothSocket bluetoothSocket) {
-                        try {
-                            OutputStream outputStream = bluetoothSocket.getOutputStream();
-                            outputStream.write("封装好的测试数据...".getBytes());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFialed(Exception e) {
-
-                    }
                 });
 
+        // 点击条目直接进行配对和连接操作，连接成功之后进行跳转
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BluetoothDevice itemAtPosition = (BluetoothDevice) parent.getItemAtPosition(position);
-                bluetoothClient.bondAndConn(true, itemAtPosition);
+                Intent intent = new Intent(ClientActivity.this,ClientChatActivity.class);
+                intent.putExtra("bluetoothdevice", itemAtPosition);
+                startActivity(intent);
             }
         });
     }

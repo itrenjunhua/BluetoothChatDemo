@@ -22,6 +22,7 @@
 
         <activity android:name=".activity.ClientActivity"/>
         <activity android:name=".activity.ServerActivity"/>
+        <activity android:name=".activity.ClientChatActivity"/>
     </application>
 
 </manifest>
