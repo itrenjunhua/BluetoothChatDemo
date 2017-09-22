@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,10 +186,24 @@ public class BluetoothClient {
      * @return
      */
     public BluetoothClient openBluetooth() {
+        if (!hasBluetooth()) return mBluetoothClient;
         if (!mBluetoothAdapter.isEnabled()) {
             mBluetoothAdapter.enable();
         }
         return mBluetoothClient;
+    }
+
+    /**
+     * 设备是否支持蓝牙
+     *
+     * @return true：支持 false：不支持
+     */
+    public boolean hasBluetooth() {
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(mContext, "该设备不支持蓝牙", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -197,6 +212,8 @@ public class BluetoothClient {
      * @return
      */
     public BluetoothClient startSearch() {
+        if (!hasBluetooth()) return mBluetoothClient;
+
         // 如果没打开蓝牙就先打开蓝牙
         openBluetooth();
 
@@ -218,6 +235,8 @@ public class BluetoothClient {
      * @return
      */
     public BluetoothClient cancelDiscovery() {
+        if (!hasBluetooth()) return mBluetoothClient;
+
         mBluetoothAdapter.cancelDiscovery();
         return mBluetoothClient;
     }
@@ -239,6 +258,8 @@ public class BluetoothClient {
      * @return
      */
     public BluetoothClient bondDevice(BluetoothDevice device) {
+        if (!hasBluetooth()) return mBluetoothClient;
+
         isAutoConn = false;
         int bondState = device.getBondState();
         if (BluetoothDevice.BOND_NONE == bondState) {
@@ -260,6 +281,8 @@ public class BluetoothClient {
      * @return
      */
     public BluetoothClient bondAndConn(boolean secure, BluetoothDevice device) {
+        if (!hasBluetooth()) return mBluetoothClient;
+
         isAutoConn = true;
         this.mSecure = secure;
         this.mDevice = device;
@@ -283,6 +306,8 @@ public class BluetoothClient {
      * @return
      */
     public BluetoothClient createConn(boolean secure, BluetoothDevice bluetoothDevice) {
+        if (!hasBluetooth()) return mBluetoothClient;
+
         mBluetoothClientConnUtils.createConnection(secure, bluetoothDevice, new BluetoothClientConnUtils.ClientConnListener() {
             @Override
             public void onSucceed(boolean secure, BluetoothSocket bluetoothSocket) {
@@ -304,6 +329,8 @@ public class BluetoothClient {
      * <b>关闭之后不能在进行数据传递，如果需要继续使用，需要重新搜索设备并建立连接</b>
      */
     public void closeClientConn() {
+        if (!hasBluetooth()) return;
+
         mBluetoothClientConnUtils.closeConnection();
         unRegiestReceiver();
         cancelDiscovery();

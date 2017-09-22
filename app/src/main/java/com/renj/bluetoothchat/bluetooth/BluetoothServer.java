@@ -66,6 +66,7 @@ public class BluetoothServer {
     };
 
     private BluetoothServer() {
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     /**
@@ -78,11 +79,26 @@ public class BluetoothServer {
     }
 
     /**
+     * 设备是否支持蓝牙
+     *
+     * @return true：支持 false：不支持
+     */
+    public boolean hasBluetooth() {
+        if (mBluetoothAdapter == null)
+            return false;
+        return true;
+    }
+
+    /**
      * 打开设备蓝牙
      *
      * @return
      */
     private BluetoothServer openBluetooth() {
+        if(!hasBluetooth()){
+            mServerStateListener.onOpenFailed(new Exception("设备不支持蓝牙"));
+            return mBluetoothServer;
+        }
         if (!mBluetoothAdapter.isEnabled()) {
             mBluetoothAdapter.enable();
         }
@@ -106,8 +122,11 @@ public class BluetoothServer {
      * @param serverAcceptListener 客户端连接监听器
      */
     public BluetoothServer openBluetoothServer(boolean secure, ServerAcceptListener serverAcceptListener) {
+        if(!hasBluetooth()){
+            mServerStateListener.onOpenFailed(new Exception("设备不支持蓝牙"));
+            return mBluetoothServer;
+        }
         if (mBluetoothServerThread == null) {
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             openBluetooth();
             this.mServerAcceptListener = serverAcceptListener;
             this.mBluetoothServerThread = new BluetoothServerThread(secure);
@@ -122,10 +141,13 @@ public class BluetoothServer {
      * 关闭蓝牙服务器
      */
     public BluetoothServer closeBluetoothServer() {
+        if(!hasBluetooth()){
+            mServerStateListener.onOpenFailed(new Exception("设备不支持蓝牙"));
+            return mBluetoothServer;
+        }
         if (mBluetoothServerThread != null) {
             mBluetoothServerThread.interrupt();
             mBluetoothServerThread = null;
-            mBluetoothAdapter = null;
         }
         mHandler.sendEmptyMessage(MSG_CLOSE);
         return mBluetoothServer;

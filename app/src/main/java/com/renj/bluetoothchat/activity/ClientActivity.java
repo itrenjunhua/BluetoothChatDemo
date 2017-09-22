@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 
 import com.renj.bluetoothchat.R;
 import com.renj.bluetoothchat.bluetooth.BluetoothClient;
+import com.renj.bluetoothchat.common.LogUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -53,6 +53,7 @@ public class ClientActivity extends Activity {
 
         bluetoothClient = BluetoothClient.newInstance(this);
 
+        // 打开蓝牙
         btOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +61,7 @@ public class ClientActivity extends Activity {
             }
         });
 
+        // 搜索设备
         btSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,16 +69,49 @@ public class ClientActivity extends Activity {
             }
         });
 
-        bluetoothClient.setOnBluetoothSearchFinishedListener(new BluetoothClient.BluetoothSearchFinishedListener() {
-            @Override
-            public void onFinishedSearch(List<BluetoothDevice> devices) {
-                listView.setAdapter(new MyAdapter(devices));
-            }
-        })
+        bluetoothClient
                 .setOnBluetoothFindDeviceListener(new BluetoothClient.BluetoothFindDeviceListener() {
                     @Override
                     public void onFindDevice(BluetoothDevice device) {
-                        Log.i("MainActivity", "找到设备：" + device.toString());
+                        LogUtil.i("找到设备：" + device.toString());
+                    }
+                })
+                .setOnBluetoothSearchFinishedListener(new BluetoothClient.BluetoothSearchFinishedListener() {
+                    @Override
+                    public void onFinishedSearch(List<BluetoothDevice> devices) {
+                        listView.setAdapter(new MyAdapter(devices));
+                    }
+                })
+                .setOnBluetoothBondChangeListener(new BluetoothClient.BluetoothBondChangeListener() {
+                    @Override
+                    public void onBond() {
+                        Toast.makeText(ClientActivity.this, "未配对", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onBonding() {
+                        Toast.makeText(ClientActivity.this, "未配对", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onBonded() {
+                        Toast.makeText(ClientActivity.this, "已配对", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setOnClientConnListener(new BluetoothClient.ClientConnListener() {
+                    @Override
+                    public void onSucceed(boolean secure, BluetoothSocket bluetoothSocket) {
+                        try {
+                            OutputStream outputStream = bluetoothSocket.getOutputStream();
+                            outputStream.write("封装好的测试数据...".getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFialed(Exception e) {
+
                     }
                 });
 
@@ -85,42 +120,6 @@ public class ClientActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BluetoothDevice itemAtPosition = (BluetoothDevice) parent.getItemAtPosition(position);
                 bluetoothClient.bondAndConn(true, itemAtPosition);
-            }
-        });
-
-        bluetoothClient.setOnBluetoothBondChangeListener(new BluetoothClient.BluetoothBondChangeListener() {
-            @Override
-            public void onBond() {
-                Toast.makeText(ClientActivity.this, "未配对", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onBonding() {
-                Toast.makeText(ClientActivity.this, "未配对", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onBonded() {
-                Toast.makeText(ClientActivity.this, "已配对", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        bluetoothClient.setOnClientConnListener(new BluetoothClient.ClientConnListener() {
-            @Override
-            public void onSucceed(boolean secure, BluetoothSocket bluetoothSocket) {
-                try {
-                    OutputStream outputStream = bluetoothSocket.getOutputStream();
-                    outputStream.write("封装好的测试数据...".getBytes());
-                    //outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFialed(Exception e) {
-
             }
         });
     }
