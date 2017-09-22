@@ -58,6 +58,7 @@ public class ServerActivity extends Activity {
         public void handleMessage(Message msg) {
             if (msg.what == MSG_UPDATE_UI) {
                 myAdapter.notifyDataSetChanged();
+                listview.setSelection(chatContent.size() - 1);
             }else if(msg.what == MSG_CLEAR_EDITTEXT){
                 etSendContent.setText("");
             }

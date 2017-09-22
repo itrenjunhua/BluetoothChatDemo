@@ -68,6 +68,7 @@ public class ClientChatActivity extends Activity {
                     break;
                 case MSG_UPDATE_UI:
                     myAdapter.notifyDataSetChanged();
+                    listview.setSelection(chatContent.size() - 1);
                     break;
                 case MSG_CLEAR_EDITTEXT:
                     etSendContent.setText("");

@@ -39,6 +39,8 @@ public class ClientActivity extends Activity {
     private Button btOpen, btSearch;
     private ListView listView;
 
+    private boolean isFinishSearch = false;
+
     private BluetoothClient bluetoothClient;
     private MyAdapter myAdapter;
     private List<BluetoothDevice> devices = new ArrayList<>();
@@ -86,6 +88,7 @@ public class ClientActivity extends Activity {
                 .setOnBluetoothSearchFinishedListener(new BluetoothClient.BluetoothSearchFinishedListener() {
                     @Override
                     public void onFinishedSearch(List<BluetoothDevice> devices) {
+                        isFinishSearch = true;
                         LogUtil.i("一共找到设备：" + devices.size());
                         Toast.makeText(ClientActivity.this, "搜索完成，共找到" + devices.size() + "设备", Toast.LENGTH_SHORT).show();
                     }
@@ -95,10 +98,14 @@ public class ClientActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BluetoothDevice itemAtPosition = (BluetoothDevice) parent.getItemAtPosition(position);
-                Intent intent = new Intent(ClientActivity.this, ClientChatActivity.class);
-                intent.putExtra("bluetoothdevice", itemAtPosition);
-                startActivity(intent);
+                if (isFinishSearch) {
+                    BluetoothDevice itemAtPosition = (BluetoothDevice) parent.getItemAtPosition(position);
+                    Intent intent = new Intent(ClientActivity.this, ClientChatActivity.class);
+                    intent.putExtra("bluetoothdevice", itemAtPosition);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(ClientActivity.this, "正在搜索设备，请稍后", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
