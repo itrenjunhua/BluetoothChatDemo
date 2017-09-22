@@ -4,16 +4,49 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/bt_open_bluetooth"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="打开蓝牙" />
+        android:layout_height="48dp"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/bt_open_server"
+        <Button
+            android:id="@+id/bt_open_bluetooth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="打开蓝牙" />
+
+        <Button
+            android:id="@+id/bt_open_server"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="启动服务器" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="启动服务器" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_send_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/bt_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -159,6 +159,7 @@ public class BluetoothServer {
             this.mBluetoothServerThread.start();
         } else {
             LogUtil.d("BluetoothServer already open ...");
+            Toast.makeText(mContext, "服务器已启动", Toast.LENGTH_SHORT).show();
         }
         return mBluetoothServer;
     }

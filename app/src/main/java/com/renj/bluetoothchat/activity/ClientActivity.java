@@ -68,6 +68,8 @@ public class ClientActivity extends Activity {
         btSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                devices.clear(); // 先清除原来的所有设备
+                myAdapter.notifyDataSetChanged();
                 bluetoothClient.startSearch();
             }
         });
