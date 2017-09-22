@@ -52,6 +52,7 @@ public class ClientChatActivity extends Activity {
     private final int MSG_WHAT_CLIENT_CONNECTION_SUCCEED = 0X01; // 客户端连接成功
     private final int MSG_WHAT_CLIENT_CONNECTION_FAILED = 0X02;  // 客户端连接失败
     private final int MSG_UPDATE_UI = 0X03; // 更新UI
+    private final int MSG_CLEAR_EDITTEXT = 0X04; // 更新UI
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -67,6 +68,9 @@ public class ClientChatActivity extends Activity {
                     break;
                 case MSG_UPDATE_UI:
                     myAdapter.notifyDataSetChanged();
+                    break;
+                case MSG_CLEAR_EDITTEXT:
+                    etSendContent.setText("");
                     break;
             }
         }
@@ -141,6 +145,11 @@ public class ClientChatActivity extends Activity {
                 });
     }
 
+    /**
+     * 发送信息
+     *
+     * @param sendContent
+     */
     private void startSend(String sendContent) {
         if (readWriteThread != null) {
             readWriteThread.sendMessage(sendContent);
@@ -187,6 +196,7 @@ public class ClientChatActivity extends Activity {
                     outputStream.write(message.getBytes());
                     chatContent.add("A" + message);
                     handler.sendEmptyMessage(MSG_UPDATE_UI);
+                    handler.sendEmptyMessage(MSG_CLEAR_EDITTEXT);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

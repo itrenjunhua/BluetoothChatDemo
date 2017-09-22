@@ -52,11 +52,14 @@ public class ServerActivity extends Activity {
     private MyAdapter myAdapter = new MyAdapter();
 
     private final int MSG_UPDATE_UI = 0XFF12;
+    private final int MSG_CLEAR_EDITTEXT = 0XFF13;
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == MSG_UPDATE_UI) {
                 myAdapter.notifyDataSetChanged();
+            }else if(msg.what == MSG_CLEAR_EDITTEXT){
+                etSendContent.setText("");
             }
         }
     };
@@ -145,6 +148,7 @@ public class ServerActivity extends Activity {
                 outputStream.write(message.getBytes());
                 chatContent.add("A" + message);
                 handler.sendEmptyMessage(MSG_UPDATE_UI);
+                handler.sendEmptyMessage(MSG_CLEAR_EDITTEXT);
             } catch (IOException e) {
                 e.printStackTrace();
             }
