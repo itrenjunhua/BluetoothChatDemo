@@ -5,6 +5,12 @@
     android:orientation="vertical">
 
     <Button
+        android:id="@+id/bt_open_bluetooth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="打开蓝牙" />
+
+    <Button
         android:id="@+id/bt_open_server"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

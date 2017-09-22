@@ -188,7 +188,15 @@ public class BluetoothClient {
     public BluetoothClient openBluetooth() {
         if (!hasBluetooth()) return mBluetoothClient;
         if (!mBluetoothAdapter.isEnabled()) {
-            mBluetoothAdapter.enable();
+            boolean enable = mBluetoothAdapter.enable();
+            if(enable)
+                Toast.makeText(mContext, "蓝牙打开成功", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(mContext, "蓝牙打开失败", Toast.LENGTH_SHORT).show();
+            //Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            //mContext.startActivity(intent);
+        }else{
+            Toast.makeText(mContext, "蓝牙已打开", Toast.LENGTH_SHORT).show();
         }
         return mBluetoothClient;
     }
@@ -214,8 +222,11 @@ public class BluetoothClient {
     public BluetoothClient startSearch() {
         if (!hasBluetooth()) return mBluetoothClient;
 
-        // 如果没打开蓝牙就先打开蓝牙
-        openBluetooth();
+        // 判断蓝牙是否已打开
+        if (!mBluetoothAdapter.isEnabled()) {
+            Toast.makeText(mContext, "请先打开蓝牙", Toast.LENGTH_SHORT).show();
+            return mBluetoothClient;
+        }
 
         // 如果没有注册广播，就先注册
         if (mBluetoothReceiver == null)

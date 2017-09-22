@@ -31,7 +31,7 @@ import java.io.OutputStream;
  * ======================================================================
  */
 public class ServerActivity extends Activity {
-    private Button openServer;
+    private Button openServer,openBluetooth;
 
     private BluetoothServer bluetoothServer;
     private final int MSG_HAVE_CONTENT = 0XFF12;
@@ -50,8 +50,9 @@ public class ServerActivity extends Activity {
         setContentView(R.layout.activity_server);
 
         openServer = (Button) findViewById(R.id.bt_open_server);
+        openBluetooth = (Button) findViewById(R.id.bt_open_bluetooth);
 
-        bluetoothServer = BluetoothServer.newInstance();
+        bluetoothServer = BluetoothServer.newInstance(getApplicationContext());
 
         bluetoothServer.setOnServerStateListener(new BluetoothServer.ServerStateListener() {
             @Override
@@ -62,6 +63,13 @@ public class ServerActivity extends Activity {
             @Override
             public void onOpenFailed(Exception e) {
                 Toast.makeText(ServerActivity.this, "启动服务器失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        openBluetooth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bluetoothServer.openBluetooth();
             }
         });
 

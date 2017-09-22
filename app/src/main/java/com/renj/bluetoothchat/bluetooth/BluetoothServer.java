@@ -3,9 +3,11 @@ package com.renj.bluetoothchat.bluetooth;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.widget.Toast;
 
 import com.renj.bluetoothchat.common.LogUtil;
 
@@ -25,6 +27,7 @@ import java.io.IOException;
  * ======================================================================
  */
 public class BluetoothServer {
+    private Context mContext;
     // 连接类型 安全/受保护的连接(Secure)或者不安全的连接/不受保护的连接(Insecure)
     private String mSocketType;
     // 定义蓝牙适配器
@@ -38,7 +41,7 @@ public class BluetoothServer {
     // 服务器端线程对象
     private BluetoothServerThread mBluetoothServerThread;
     // 使用单例
-    private static BluetoothServer mBluetoothServer = new BluetoothServer();
+    private static BluetoothServer mBluetoothServer;
 
     private final int MSG_OPEN_SUCCEED = 0XFF01;
     private final int MSG_OPEN_FAILED = 0XFF02;
@@ -65,7 +68,8 @@ public class BluetoothServer {
         }
     };
 
-    private BluetoothServer() {
+    private BluetoothServer(Context context) {
+        this.mContext = context;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
@@ -74,7 +78,14 @@ public class BluetoothServer {
      *
      * @return
      */
-    public static BluetoothServer newInstance() {
+    public static BluetoothServer newInstance(Context context) {
+        if (mBluetoothServer == null) {
+            synchronized (BluetoothServer.class) {
+                if (mBluetoothServer == null) {
+                    mBluetoothServer = new BluetoothServer(context);
+                }
+            }
+        }
         return mBluetoothServer;
     }
 
@@ -84,8 +95,10 @@ public class BluetoothServer {
      * @return true：支持 false：不支持
      */
     public boolean hasBluetooth() {
-        if (mBluetoothAdapter == null)
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(mContext, "该设备不支持蓝牙", Toast.LENGTH_SHORT).show();
             return false;
+        }
         return true;
     }
 
@@ -94,13 +107,21 @@ public class BluetoothServer {
      *
      * @return
      */
-    private BluetoothServer openBluetooth() {
+    public BluetoothServer openBluetooth() {
         if(!hasBluetooth()){
             mServerStateListener.onOpenFailed(new Exception("设备不支持蓝牙"));
             return mBluetoothServer;
         }
         if (!mBluetoothAdapter.isEnabled()) {
-            mBluetoothAdapter.enable();
+            boolean enable = mBluetoothAdapter.enable();
+            if(enable)
+                Toast.makeText(mContext, "蓝牙打开成功", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(mContext, "蓝牙打开失败", Toast.LENGTH_SHORT).show();
+            // Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            // mContext.startActivity(intent);
+        }else{
+            Toast.makeText(mContext, "蓝牙已打开", Toast.LENGTH_SHORT).show();
         }
         return mBluetoothServer;
     }
@@ -126,8 +147,13 @@ public class BluetoothServer {
             mServerStateListener.onOpenFailed(new Exception("设备不支持蓝牙"));
             return mBluetoothServer;
         }
+        // 判断蓝牙是否已打开
+        if (!mBluetoothAdapter.isEnabled()) {
+            Toast.makeText(mContext, "请先打开蓝牙", Toast.LENGTH_SHORT).show();
+            return mBluetoothServer;
+        }
+
         if (mBluetoothServerThread == null) {
-            openBluetooth();
             this.mServerAcceptListener = serverAcceptListener;
             this.mBluetoothServerThread = new BluetoothServerThread(secure);
             this.mBluetoothServerThread.start();

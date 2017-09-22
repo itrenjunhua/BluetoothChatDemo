@@ -13,11 +13,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.renj.bluetoothchat.R;
 import com.renj.bluetoothchat.bluetooth.BluetoothClient;
 import com.renj.bluetoothchat.common.LogUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +40,8 @@ public class ClientActivity extends Activity {
     private ListView listView;
 
     private BluetoothClient bluetoothClient;
+    private MyAdapter myAdapter;
+    private List<BluetoothDevice> devices = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +51,8 @@ public class ClientActivity extends Activity {
         btOpen = (Button) findViewById(R.id.bt_open);
         btSearch = (Button) findViewById(R.id.bt_search);
         listView = (ListView) findViewById(R.id.listview);
+        myAdapter = new MyAdapter();
+        listView.setAdapter(myAdapter);
 
         bluetoothClient = BluetoothClient.newInstance(getApplicationContext());
 
@@ -71,13 +77,15 @@ public class ClientActivity extends Activity {
                 .setOnBluetoothFindDeviceListener(new BluetoothClient.BluetoothFindDeviceListener() {
                     @Override
                     public void onFindDevice(BluetoothDevice device) {
-                        LogUtil.i("找到设备：" + device.toString());
+                        devices.add(device);
+                        myAdapter.notifyDataSetChanged();
                     }
                 })
                 .setOnBluetoothSearchFinishedListener(new BluetoothClient.BluetoothSearchFinishedListener() {
                     @Override
                     public void onFinishedSearch(List<BluetoothDevice> devices) {
-                        listView.setAdapter(new MyAdapter(devices));
+                        LogUtil.i("一共找到设备：" + devices.size());
+                        Toast.makeText(ClientActivity.this, "搜索完成，共找到" + devices.size() + "设备", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -86,7 +94,7 @@ public class ClientActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BluetoothDevice itemAtPosition = (BluetoothDevice) parent.getItemAtPosition(position);
-                Intent intent = new Intent(ClientActivity.this,ClientChatActivity.class);
+                Intent intent = new Intent(ClientActivity.this, ClientChatActivity.class);
                 intent.putExtra("bluetoothdevice", itemAtPosition);
                 startActivity(intent);
             }
@@ -96,11 +104,6 @@ public class ClientActivity extends Activity {
 
     // 适配器
     class MyAdapter extends BaseAdapter {
-        private List<BluetoothDevice> devices;
-
-        public MyAdapter(List<BluetoothDevice> devices) {
-            this.devices = devices;
-        }
 
         @Override
         public int getCount() {
