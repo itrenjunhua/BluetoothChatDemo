@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.renj.bluetoothchat.R;
-import com.renj.bluetoothchat.client.BluetoothClient;
+import com.renj.bluetoothchat.bluetooth.BluetoothClient;
 
 import java.io.IOException;
 import java.io.OutputStream;

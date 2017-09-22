@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.renj.bluetoothchat.R;
 import com.renj.bluetoothchat.common.LogUtil;
-import com.renj.bluetoothchat.server.BluetoothServer;
+import com.renj.bluetoothchat.bluetooth.BluetoothServer;
 
 import java.io.IOException;
 import java.io.InputStream;

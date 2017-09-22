@@ -1,4 +1,4 @@
-package com.renj.bluetoothchat.client;
+package com.renj.bluetoothchat.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

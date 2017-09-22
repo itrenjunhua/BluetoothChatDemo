@@ -1,4 +1,4 @@
-package com.renj.bluetoothchat.server;
+package com.renj.bluetoothchat.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import com.renj.bluetoothchat.common.Constants;
 import com.renj.bluetoothchat.common.LogUtil;
 
 import java.io.IOException;

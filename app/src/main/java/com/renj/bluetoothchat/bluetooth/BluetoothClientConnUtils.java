@@ -1,9 +1,8 @@
-package com.renj.bluetoothchat.client;
+package com.renj.bluetoothchat.bluetooth;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-import com.renj.bluetoothchat.common.Constants;
 import com.renj.bluetoothchat.common.LogUtil;
 
 import java.io.IOException;
