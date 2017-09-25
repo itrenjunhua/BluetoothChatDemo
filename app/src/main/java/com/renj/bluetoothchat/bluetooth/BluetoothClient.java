@@ -10,8 +10,9 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Toast;
+
+import com.renj.bluetoothchat.common.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -276,10 +277,10 @@ public class BluetoothClient {
         if (BluetoothDevice.BOND_NONE == bondState) {
             device.createBond();
         } else if (BluetoothDevice.BOND_BONDING == bondState) {
-            Log.i("BluetoothClient", "正在配对 ...");
+            LogUtil.i("正在配对 ...");
         } else if (BluetoothDevice.BOND_BONDED == bondState) {
             // 已经配对
-            Log.i("BluetoothClient", "已经配对 ...");
+            LogUtil.i("已经配对 ...");
         }
         return mBluetoothClient;
     }
@@ -301,7 +302,7 @@ public class BluetoothClient {
         if (BluetoothDevice.BOND_NONE == bondState) {
             device.createBond();
         } else if (BluetoothDevice.BOND_BONDING == bondState) {
-            Log.i("BluetoothClient", "正在配对 ...");
+            LogUtil.i("正在配对 ...");
         } else if (BluetoothDevice.BOND_BONDED == bondState) {
             // 建立连接
             createConn(secure, device);
@@ -433,15 +434,15 @@ public class BluetoothClient {
                 switch (state) {
                     case BluetoothDevice.BOND_NONE:
                         mHandler.sendEmptyMessage(MSG_WHAT_BOND_NONE);
-                        Log.d("aaa", "BOND_NONE 删除配对");
+                        LogUtil.d("BOND_NONE 删除配对");
                         break;
                     case BluetoothDevice.BOND_BONDING:
                         mHandler.sendEmptyMessage(MSG_WHAT_BOND_BONDING);
-                        Log.d("aaa", "BOND_BONDING 正在配对");
+                        LogUtil.d("BOND_BONDING 正在配对");
                         break;
                     case BluetoothDevice.BOND_BONDED:
                         mHandler.sendEmptyMessage(MSG_WHAT_BOND_BONDED);
-                        Log.d("aaa", "BOND_BONDED 配对成功");
+                        LogUtil.d("BOND_BONDED 配对成功");
                         break;
                 }
             }
