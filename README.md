@@ -2,7 +2,12 @@
 <h4>Android蓝牙聊天Demo</h4>
 
 # 效果图展示
-![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/images/main.png)
+## Demo主页
+![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/main.png)
+## 服务端
+![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/server_1.png)
+![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/server_2.png)
+![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/server_3.png)
 
 # 使用说明
 > 1.需要进行蓝牙间的通讯，首先需要2台手机，一个服务端、一个客户端，然后在2台手机上都运行这个Demo；<br/>
