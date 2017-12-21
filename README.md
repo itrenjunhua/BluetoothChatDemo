@@ -11,13 +11,8 @@
 
 # 效果图展示
 ## Demo主页
-![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/main.png)
+<img src="https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/main.png"  height="500" width="300">
 ## 服务端
-![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/server_1.png)
-![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/server_2.png)
-![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/server_3.png)
+<img src="https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/server_1.png"  height="500" width="300">  <img src="https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/server_2.png"  height="500" width="300">  <img src="https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/server_3.png"  height="500" width="300">
 ## 客户端
-![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/client_main.png)
-![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/client_search_result.png)
-![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/client_chat_1.png)
-![Image text](https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/client_chat_2.png)
+<img src="https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/client_main.png"  height="500" width="300">  <img src="https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/client_search_result.png"  height="500" width="300"> <img src="https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/client_chat_1.png"  height="500" width="300">  <img src="https://github.com/itrenjunhua/BluetoothChatDemo/blob/master/images/client_chat_2.png"  height="500" width="300">
