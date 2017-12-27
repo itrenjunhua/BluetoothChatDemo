@@ -59,7 +59,7 @@ public class ServerActivity extends Activity {
             if (msg.what == MSG_UPDATE_UI) {
                 myAdapter.notifyDataSetChanged();
                 listview.setSelection(chatContent.size() - 1);
-            }else if(msg.what == MSG_CLEAR_EDITTEXT){
+            } else if (msg.what == MSG_CLEAR_EDITTEXT) {
                 etSendContent.setText("");
             }
         }
@@ -92,6 +92,7 @@ public class ServerActivity extends Activity {
             }
         });
 
+        // 打开蓝牙
         openBluetooth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,13 +100,16 @@ public class ServerActivity extends Activity {
             }
         });
 
+        // 开启蓝牙服务器
         openServer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 打开蓝牙服务器，传入一个客户端链接监听对象
                 bluetoothServer.openBluetoothServer(true, serverAcceptListener);
             }
         });
 
+        // 发送内容
         btSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,6 +123,7 @@ public class ServerActivity extends Activity {
         });
     }
 
+    // 客户端建立链接监听，回调方法参数为服务端的 BluetoothSocket 对象
     private BluetoothServer.ServerAcceptListener serverAcceptListener = new BluetoothServer.ServerAcceptListener() {
         @Override
         public void onAccept(BluetoothSocket bluetoothSocket) {

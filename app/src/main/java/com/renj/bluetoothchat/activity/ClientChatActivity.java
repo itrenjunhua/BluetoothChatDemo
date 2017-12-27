@@ -111,6 +111,7 @@ public class ClientChatActivity extends Activity {
         });
 
         bluetoothClient
+                // 设置别对监听
                 .setOnBluetoothBondChangeListener(new BluetoothClient.BluetoothBondChangeListener() {
                     @Override
                     public void onBond() {
@@ -127,6 +128,7 @@ public class ClientChatActivity extends Activity {
                         Toast.makeText(ClientChatActivity.this, "配对成功", Toast.LENGTH_SHORT).show();
                     }
                 })
+                // 设置链接监听
                 .setOnClientConnListener(new BluetoothClient.ClientConnListener() {
                     @Override
                     public void onSucceed(boolean secure, BluetoothSocket bluetoothSocket) {
