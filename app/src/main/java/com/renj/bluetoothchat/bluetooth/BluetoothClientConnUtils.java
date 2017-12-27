@@ -3,7 +3,7 @@ package com.renj.bluetoothchat.bluetooth;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-import com.renj.bluetoothchat.common.LogUtil;
+import com.renj.bluetoothchat.common.Logger;
 
 import java.io.IOException;
 
@@ -66,7 +66,7 @@ public class BluetoothClientConnUtils {
                 try {
                     mBluetoothSocket.close();
                 } catch (IOException e) {
-                    LogUtil.e("client close BluetoothSocket failed.\n" + e);
+                    Logger.e("client close BluetoothSocket failed.\n" + e);
                 }
             }
             mClientConnThread.stop();
@@ -121,12 +121,12 @@ public class BluetoothClientConnUtils {
                 if (mClientConnListener != null)
                     mClientConnListener.onSucceed(secure, mBluetoothSocket);
 
-                LogUtil.i("Socket Type：" + mSocketType + " connection service succeed");
+                Logger.i("Socket Type：" + mSocketType + " connection service succeed");
             } catch (IOException e) {
                 if (mClientConnListener != null)
                     mClientConnListener.onFialed(e);
 
-                LogUtil.e("Socket Type：" + mSocketType + " connection service failed\n" + e);
+                Logger.e("Socket Type：" + mSocketType + " connection service failed\n" + e);
             }
         }
     }

@@ -12,7 +12,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
-import com.renj.bluetoothchat.common.LogUtil;
+import com.renj.bluetoothchat.common.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -277,10 +277,10 @@ public class BluetoothClient {
         if (BluetoothDevice.BOND_NONE == bondState) {
             device.createBond();
         } else if (BluetoothDevice.BOND_BONDING == bondState) {
-            LogUtil.i("正在配对 ...");
+            Logger.i("正在配对 ...");
         } else if (BluetoothDevice.BOND_BONDED == bondState) {
             // 已经配对
-            LogUtil.i("已经配对 ...");
+            Logger.i("已经配对 ...");
         }
         return mBluetoothClient;
     }
@@ -302,7 +302,7 @@ public class BluetoothClient {
         if (BluetoothDevice.BOND_NONE == bondState) {
             device.createBond();
         } else if (BluetoothDevice.BOND_BONDING == bondState) {
-            LogUtil.i("正在配对 ...");
+            Logger.i("正在配对 ...");
         } else if (BluetoothDevice.BOND_BONDED == bondState) {
             // 建立连接
             createConn(secure, device);
@@ -434,15 +434,15 @@ public class BluetoothClient {
                 switch (state) {
                     case BluetoothDevice.BOND_NONE:
                         mHandler.sendEmptyMessage(MSG_WHAT_BOND_NONE);
-                        LogUtil.d("BOND_NONE 删除配对");
+                        Logger.d("BOND_NONE 删除配对");
                         break;
                     case BluetoothDevice.BOND_BONDING:
                         mHandler.sendEmptyMessage(MSG_WHAT_BOND_BONDING);
-                        LogUtil.d("BOND_BONDING 正在配对");
+                        Logger.d("BOND_BONDING 正在配对");
                         break;
                     case BluetoothDevice.BOND_BONDED:
                         mHandler.sendEmptyMessage(MSG_WHAT_BOND_BONDED);
-                        LogUtil.d("BOND_BONDED 配对成功");
+                        Logger.d("BOND_BONDED 配对成功");
                         break;
                 }
             }

@@ -9,7 +9,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
-import com.renj.bluetoothchat.common.LogUtil;
+import com.renj.bluetoothchat.common.Logger;
 
 import java.io.IOException;
 
@@ -158,7 +158,7 @@ public class BluetoothServer {
             this.mBluetoothServerThread = new BluetoothServerThread(secure);
             this.mBluetoothServerThread.start();
         } else {
-            LogUtil.d("BluetoothServer already open ...");
+            Logger.d("BluetoothServer already open ...");
             Toast.makeText(mContext, "服务器已启动", Toast.LENGTH_SHORT).show();
         }
         return mBluetoothServer;
@@ -250,14 +250,14 @@ public class BluetoothServer {
                 message.obj = secure;
                 mHandler.sendMessage(message);
 
-                LogUtil.i("Socket Type：" + mSocketType + " listen() succeed");
+                Logger.i("Socket Type：" + mSocketType + " listen() succeed");
             } catch (IOException e) {
                 Message message = Message.obtain();
                 message.what = MSG_OPEN_FAILED;
                 message.obj = e;
                 mHandler.sendMessage(message);
 
-                LogUtil.e("Socket Type：" + mSocketType + " listen() failed\n" + e);
+                Logger.e("Socket Type：" + mSocketType + " listen() failed\n" + e);
             }
             mBluetoothServerSocket = tmp;
         }
@@ -267,9 +267,9 @@ public class BluetoothServer {
             BluetoothSocket bluetoothSocket = null;
             try {
                 bluetoothSocket = mBluetoothServerSocket.accept();
-                LogUtil.i("Socket Type：" + mSocketType + " accept() succeed");
+                Logger.i("Socket Type：" + mSocketType + " accept() succeed");
             } catch (IOException e) {
-                LogUtil.e("Socket Type: " + mSocketType + "accept() failed\n" + e);
+                Logger.e("Socket Type: " + mSocketType + "accept() failed\n" + e);
             }
 
             if (bluetoothSocket != null && bluetoothSocket.isConnected()) {

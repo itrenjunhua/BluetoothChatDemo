@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.renj.bluetoothchat.R;
 import com.renj.bluetoothchat.bluetooth.BluetoothClient;
-import com.renj.bluetoothchat.common.LogUtil;
+import com.renj.bluetoothchat.common.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +89,7 @@ public class ClientActivity extends Activity {
                     @Override
                     public void onFinishedSearch(List<BluetoothDevice> devices) {
                         isFinishSearch = true;
-                        LogUtil.i("一共找到设备：" + devices.size());
+                        Logger.i("一共找到设备：" + devices.size());
                         Toast.makeText(ClientActivity.this, "搜索完成，共找到" + devices.size() + "设备", Toast.LENGTH_SHORT).show();
                     }
                 });

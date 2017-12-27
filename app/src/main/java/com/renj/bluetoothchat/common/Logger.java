@@ -14,21 +14,21 @@ import android.util.Log;
  * <p>
  * ======================================================================
  */
-public class LogUtil {
-    private static String TAG = "BluetoothDemo LogUtil";
+public class Logger {
+    private static String TAG = "BluetoothDemo Logger";
     private static boolean IS_FULL_CLASSNAME;
     private static int LOG_LEVEL = Log.VERBOSE;
 
     public static void setFullClassName(boolean isFullClassName) {
-        LogUtil.IS_FULL_CLASSNAME = isFullClassName;
+        Logger.IS_FULL_CLASSNAME = isFullClassName;
     }
 
     public static void setLogLevel(int level) {
-        LogUtil.LOG_LEVEL = level;
+        Logger.LOG_LEVEL = level;
     }
 
     public static void setAppTAG(String tag) {
-        LogUtil.TAG = tag;
+        Logger.TAG = tag;
     }
 
 
