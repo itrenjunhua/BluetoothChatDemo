@@ -29,7 +29,7 @@ import java.util.List;
  * <p>
  * 创建时间：2017-09-21   17:23
  * <p>
- * 描述：客户端页面
+ * 描述：客户端页面搜索蓝牙设备页面
  * <p>
  * 修订历史：
  * <p>
@@ -78,6 +78,7 @@ public class ClientActivity extends Activity {
 
         // 设置蓝牙操作的相关监听
         bluetoothClient
+                // 设置找到单个设备监听
                 .setOnBluetoothFindDeviceListener(new BluetoothClient.BluetoothFindDeviceListener() {
                     @Override
                     public void onFindDevice(BluetoothDevice device) {
@@ -85,6 +86,7 @@ public class ClientActivity extends Activity {
                         myAdapter.notifyDataSetChanged();
                     }
                 })
+                // 设置搜索完成监听
                 .setOnBluetoothSearchFinishedListener(new BluetoothClient.BluetoothSearchFinishedListener() {
                     @Override
                     public void onFinishedSearch(List<BluetoothDevice> devices) {
